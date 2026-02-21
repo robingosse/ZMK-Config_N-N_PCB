@@ -1,0 +1,46 @@
+// GossieKey — LEFT half overlay
+// Board: nice!nano v2 (nRF52840)
+//
+// Row pins:  R0=P0.17, R1=P0.20, R2=P0.22
+// Col pins:  C0=P0.29, C1=P0.02, C2=P1.15, C3=P1.13, C4=P1.11, C5=P1.02
+// TRRS:      TX=P0.06 (serial out to right half)
+// Split:     Left = central (USB host)
+
+#include "gossiekey.dtsi"
+
+// Left half uses columns 0-5 in the transform
+&default_transform {
+    col-offset = <0>;
+};
+
+// Kscan: diode direction col2row means rows are outputs (driven HIGH),
+// cols are inputs (pulled DOWN, go HIGH when key pressed).
+// Swap to "row2col" and flip GPIO flags if your diodes are oriented the other way.
+&kscan0 {
+    compatible = "zmk,kscan-gpio-matrix";
+    wakeup-source;
+    diode-direction = "col2row";
+
+    row-gpios
+        = <&gpio0 17 GPIO_ACTIVE_HIGH>   // R0
+        , <&gpio0 20 GPIO_ACTIVE_HIGH>   // R1
+        , <&gpio0 22 GPIO_ACTIVE_HIGH>   // R2
+        ;
+
+    col-gpios
+        = <&gpio0 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C0
+        , <&gpio0  2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C1
+        , <&gpio1 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C2
+        , <&gpio1 13 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C3
+        , <&gpio1 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C4
+        , <&gpio1  2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C5
+        ;
+};
+
+// UART serial transport (TRRS cable)
+// TX on left = P0.06, no RX needed on central for basic split
+&uart0 {
+    compatible = "nordic,nrf-uarte";
+    tx-pin = <6>;    // P0.06 = TRRS TX
+    rx-pin = <8>;    // P0.08 = TRRS RX (needed even on central)
+};

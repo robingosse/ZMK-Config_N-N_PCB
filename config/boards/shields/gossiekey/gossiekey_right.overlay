@@ -1,0 +1,39 @@
+// GossieKey — RIGHT half overlay
+// Board: nice!nano v2 (nRF52840)
+//
+// Same physical PCB as left, same pin assignments.
+// col-offset = 6 maps this half to columns 6-11 in the transform.
+
+#include "gossiekey.dtsi"
+
+&default_transform {
+    col-offset = <6>;
+};
+
+&kscan0 {
+    compatible = "zmk,kscan-gpio-matrix";
+    wakeup-source;
+    diode-direction = "col2row";
+
+    row-gpios
+        = <&gpio0 17 GPIO_ACTIVE_HIGH>   // R0
+        , <&gpio0 20 GPIO_ACTIVE_HIGH>   // R1
+        , <&gpio0 22 GPIO_ACTIVE_HIGH>   // R2
+        ;
+
+    col-gpios
+        = <&gpio0 29 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C0
+        , <&gpio0  2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C1
+        , <&gpio1 15 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C2
+        , <&gpio1 13 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C3
+        , <&gpio1 11 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C4
+        , <&gpio1  2 (GPIO_ACTIVE_HIGH | GPIO_PULL_DOWN)>   // C5
+        ;
+};
+
+// UART serial transport
+&uart0 {
+    compatible = "nordic,nrf-uarte";
+    tx-pin = <6>;    // P0.06 = TRRS TX
+    rx-pin = <8>;    // P0.08 = TRRS RX
+};

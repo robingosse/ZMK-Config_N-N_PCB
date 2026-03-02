@@ -1,8 +1,8 @@
 ---
 include:
-  - board: nice_nano_v2
+  - board: nice_nano/v2
     shield: gossiekey_left
-  - board: nice_nano_v2
+  - board: nice_nano/v2
     shield: gossiekey_right
-  - board: nice_nano_v2
+  - board: nice_nano/v2
     shield: settings_reset
